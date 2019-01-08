@@ -1,0 +1,36 @@
+<html>
+
+<body>
+<img id="myImg" src="https://createjs.com/assets/images/demos/easel-alphamask_1.png" alt="The Pulpit Rock" width="304" height="228">
+<p>Click the button to get the URL of the image.</p>
+
+<button onclick="myFunction()">Try it</button>
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myImg").src;
+  document.getElementById("demo").innerHTML = x;
+}
+</script>
+
+
+
+
+<button onclick="this.innerHTML = Date()">The time is?</button>
+
+
+<canvas id="myCanvas" width="200" height="100"
+style="border:1px solid #c3c3c3;">
+Your browser does not support the canvas element.
+</canvas>
+
+<script>
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+ctx.fillStyle = "#FF0000";
+ctx.fillRect(0,0,150,75);
+</script>
+
+</body>
+</html>
