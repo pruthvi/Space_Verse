@@ -206,23 +206,33 @@ function addEnemy() {
 
 function startGame() {
 	stage.onMouseMove = moveShip;
-	var keysDown ={};
 
-	window.addEventListener('keydown',function(e){	keysDown[e.keyCode]=true;	}, false);
-	
-	window.addEventListener('keyup',function(e){	delete	keysDown[e.keyCode];	}, false);
-/*
-	window.addEventListener('keydown',function(e){	
-		if(keyCode == 38){
-			ship.y -= 1;	
-		}
-		if(keyCode == 40){
-			ship.y += 1;	
 
-		}
+	const ARROW_KEY_LEFT = 37;
+	const ARROW_KEY_UP = 38;
+	const ARROW_KEY_RIGHT = 39;
+	const ARROW_KEY_DOWN = 40;
+	window.onkeydown = onDPad;
 	
-	});
-	*/
+	function onDPad(e){
+
+		switch (e.keyCode)
+		{
+			case ARROW_KEY_LEFT:
+				ship.x -= 1;
+			break;
+			case ARROW_KEY_UP:
+				ship.y -= 1;	break;
+			case ARROW_KEY_RIGHT:
+				ship.x += 1;	break;
+			case ARROW_KEY_DOWN:
+				ship.y += 1;
+				break;
+		}
+	}
+
+
+	
 
 
 
@@ -235,16 +245,6 @@ function startGame() {
 	timerSource = setInterval('addEnemy()', 1000);
 }
 
-
-
-var update = function(modifier){
-
-		if(38 in keysDown)
-		{
-			ship.y += 5 * modifier;
-		}
-
-}
 
 function update() {
 
