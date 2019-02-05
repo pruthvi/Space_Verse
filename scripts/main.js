@@ -83,7 +83,7 @@ stage = new createjs.Stage(canvas);
 	bg2Img.name = 'bg2';
 	bg2Img.onload = loadGfx;
 
-	sImg.src = 'img/ship.bmp';
+	sImg.src = 'img/ship.png';
 	sImg.name = 'ship';
 	sImg.onload = loadGfx;
 
@@ -155,7 +155,7 @@ function addGameView() {
 	/* Score Text */
 
 	score = new Text('0', 'bold 14px Courier New', '#FFFFFF');
-	score.maxWidth = 1000; //fix for Chrome 17 
+	score.maxWidth = 1000; 
 	score.x = 2;
 	score.y = 476;
 
@@ -198,7 +198,7 @@ function addEnemy() {
 	var e = new createjs.Bitmap(eImg);
 
 	e.x = Math.floor(Math.random() * (320 - 50))
-	e.y = -50
+	e.y = 0
 
 	enemies.addChild(e);
 	stage.update();
@@ -206,6 +206,26 @@ function addEnemy() {
 
 function startGame() {
 	stage.onMouseMove = moveShip;
+	var keysDown ={};
+
+	window.addEventListener('keydown',function(e){	keysDown[e.keyCode]=true;	}, false);
+	
+	window.addEventListener('keyup',function(e){	delete	keysDown[e.keyCode];	}, false);
+/*
+	window.addEventListener('keydown',function(e){	
+		if(keyCode == 38){
+			ship.y -= 1;	
+		}
+		if(keyCode == 40){
+			ship.y += 1;	
+
+		}
+	
+	});
+	*/
+
+
+
 	bg.onPress = shoot;
 	bg2.onPress = shoot;
 
@@ -215,7 +235,20 @@ function startGame() {
 	timerSource = setInterval('addEnemy()', 1000);
 }
 
+
+
+var update = function(modifier){
+
+		if(38 in keysDown)
+		{
+			ship.y += 5 * modifier;
+		}
+
+}
+
 function update() {
+
+
 	/* Move Background */
 
 	bg.y += 5;
