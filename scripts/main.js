@@ -166,6 +166,11 @@ function addGameView() {
 	/* Add gfx to stage and Tween Ship */
 
 	stage.addChild(bg);
+	stage.addChild(bg2);
+	stage.addChild(ship);
+	stage.addChild(enemies);
+	stage.addChild(bullets);
+	stage.addChild(lives);
 	//stage.addChild(bg, bg2, ship, enemies, bullets, lives, score);
 	createjs.Tween.get(ship).to({
 		y: 425
