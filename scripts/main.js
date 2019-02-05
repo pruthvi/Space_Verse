@@ -59,7 +59,6 @@ stage = new createjs.Stage(canvas);
 	stage.mouseEventsEnabled = true;
 
 	/* Sound 
-
 	SoundJS.addBatch([{
 		name: 'boss',
 		src: 'boss.mp3',
@@ -166,8 +165,9 @@ function addGameView() {
 
 	/* Add gfx to stage and Tween Ship */
 
-	stage.addChild(bg, bg2, ship, enemies, bullets, lives, score);
-	Tween.get(ship).to({
+	stage.addChild(bg);
+	//stage.addChild(bg, bg2, ship, enemies, bullets, lives, score);
+	createjs.Tween.get(ship).to({
 		y: 425
 	}, 1000).call(startGame);
 }
@@ -190,7 +190,7 @@ function shoot() {
 }
 
 function addEnemy() {
-	var e = new Bitmap(eImg);
+	var e = new createjs.Bitmap(eImg);
 
 	e.x = Math.floor(Math.random() * (320 - 50))
 	e.y = -50
@@ -204,7 +204,7 @@ function startGame() {
 	bg.onPress = shoot;
 	bg2.onPress = shoot;
 
-	Ticker.addListener(tkr, false);
+	createjs.Ticker.addEventListener(tkr, false);
 	tkr.tick = update;
 
 	timerSource = setInterval('addEnemy()', 1000);
