@@ -220,11 +220,13 @@ function startGame() {
 		{
 			case ARROW_KEY_LEFT:
 				ship.x -= 1;
-			break;
+				break;
 			case ARROW_KEY_UP:
-				ship.y -= 1;	break;
+				ship.y -= 1;
+				break;
 			case ARROW_KEY_RIGHT:
-				ship.x += 1;	break;
+				ship.x += 1;
+				break;
 			case ARROW_KEY_DOWN:
 				ship.y += 1;
 				break;

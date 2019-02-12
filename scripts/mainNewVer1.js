@@ -279,13 +279,13 @@ function update() {
 	if (leftKeyDown) {
 		ship.x -= 5;
 	}
-	else if (rightKeyDown) {
+	if (rightKeyDown) {
 		ship.x += 5;
 	}
-	else if (upKeyDown) {
+	if (upKeyDown) {
 		ship.y -= 5;
 	}
-	else if (downKeyDown) {
+	if (downKeyDown) {
 		ship.y += 5;
 	}
 
