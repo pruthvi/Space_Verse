@@ -255,8 +255,22 @@ function update()
 
 	for(var j = 0; j < enemies.children.length; j++)
 	{
-		enemies.children[j].y += 5;
+		enemies.children[j].y += 8;
 
+		 if (enemies.children[j].x < 320 && enemies.children[j].x > 180)
+		 {
+		 	enemies.children[j].x -= 1.5;
+		 }
+		else if (enemies.children[j].x < 140 && enemies.children[j].x > -50)
+		  {
+		 	enemies.children[j].x += 1.5;
+		  }
+		/* Remove Offstage Enemies */
+		
+		if(enemies.children[j].y > 480 + 50)
+		{
+			enemies.removeChildAt(j);
+		}
 		/* Remove Offstage Enemies */
 
 		if(enemies.children[j].y > 480 + 50)
