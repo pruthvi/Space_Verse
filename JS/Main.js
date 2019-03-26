@@ -2,7 +2,7 @@
 
 var canvas;
 var stage;
-
+var windowW, windowH;
 /* [Graphics] */
 
 /* Background */
@@ -56,35 +56,42 @@ var timerSource;
 
 /* Main */
 
-function Main()
-{
+function Main() {
 	/* Link Canvas */
 
 	canvas = document.getElementById('Shooter');
-  	stage = new Stage(canvas);
+	stage = new Stage(canvas);
 
-  	stage.mouseEventsEnabled = true;
+	stage.mouseEventsEnabled = true;
 
-  	/* Sound */
+	stage.canvas.width = window.innerWidth;
+	stage.canvas.height = window.innerHeight;
+
+	windowH = stage.canvas.height;
+	windowW = stage.canvas.width;
+
+	/* Sound */
 
 	SoundJS.addBatch([
-		{name:'boss', src:'sound/boss.mp3', instances:1},
-		{name:'explo', src:'sound/explo.mp3', instances:10},
-		{name:'shot', src:'sound/shot.mp3', instances:10}]);
+		{ name: 'boss', src: 'sound/boss.mp3', instances: 1 },
+		{ name: 'explo', src: 'sound/explo.mp3', instances: 10 },
+		{ name: 'shot', src: 'sound/shot.mp3', instances: 10 }]);
 
-  	/* Load GFX */
+	/* Load GFX */
 
-  	bgImg.src = 'img/bg.png';
-  	bgImg.name = 'bg';
-  	bgImg.onload = loadGfx;
+	bgImg.src = 'img/bg.png';
+	bgImg.name = 'bg';
 
-  	bg2Img.src = 'img/bg2.png';
-  	bg2Img.name = 'bg2';
-  	bg2Img.onload = loadGfx;
+	bgImg.onload = loadGfx;
 
-  	sImg.src = 'img/ship.png';
-  	sImg.name = 'ship';
-  	sImg.onload = loadGfx;
+
+	bg2Img.src = 'img/bg2.png';
+	bg2Img.name = 'bg2';
+	bg2Img.onload = loadGfx;
+
+	sImg.src = 'img/ship.png';
+	sImg.name = 'ship';
+	sImg.onload = loadGfx;
 
 	eImg.src = 'img/enemy1.png';
 	eImg.name = 'enemy';
@@ -116,44 +123,43 @@ function Main()
 	Ticker.addListener(stage);
 }
 
-function loadGfx(e)
-{
-	if(e.target.name = 'bg'){bg = new Bitmap(bgImg);}
-	if(e.target.name = 'bg2'){bg2 = new Bitmap(bg2Img);}
-	if(e.target.name = 'ship'){ship = new Bitmap(sImg);}
+function loadGfx(e) {
+	if (e.target.name = 'bg') { bg = new Bitmap(bgImg); }
+	if (e.target.name = 'bg2') { bg2 = new Bitmap(bg2Img); }
+	if (e.target.name = 'ship') { ship = new Bitmap(sImg); }
+	bg.setTransform(0, 0, 5, 2);
+	bg2.setTransform(0, 0, 5, 2);
+
 
 	gfxLoaded++;
 
-	if(gfxLoaded == 9)
-	{
+	if (gfxLoaded == 9) {
 		addGameView();
 	}
 }
 
-function addGameView()
-{
-	ship.x = centerX - 18.5;
-	ship.y = 480 + 34;
+function addGameView() {
+	ship.x = centerX /*- 18.5 */;
+	//	ship.y = 480 + 34;
+	ship.y = windowH - 50;
+
 
 	/* Add Lives */
 
-	for(var i = 0; i < 3; i++)
-	{
+	for (var i = 0; i < 3; i++) {
 		var l = new Bitmap(lImg);
 
-		l.x = 248 + (25 * i);
-		l.y = 463;
-
+		l.x = windowW - 100;	/*	location of lives */
+		l.y = 50;
 		lives.addChild(l);
 		stage.update();
 	}
 
 	/* Score Text */
-
 	score = new Text('0', 'bold 14px Courier New', '#FFFFFF');
-	score.maxWidth = 1000;	//fix for Chrome 17
-	score.x = 2;
-	score.y = 476;
+	score.maxWidth = 1000;
+	score.x = windowW - 50; /*	location of Scores */
+	score.y = 50;
 
 	/* Second Background */
 
@@ -162,16 +168,26 @@ function addGameView()
 	/* Add gfx to stage and Tween Ship */
 
 	stage.addChild(bg, bg2, ship, enemies, bullets, lives, score);
-	Tween.get(ship).to({y:425}, 1000).call(startGame);
+	Tween.get(ship).to({ y: /*425*/ windowH - 100 }, 1000).call(startGame);
 }
 
-function moveShip(e)
-{
-	ship.x = e.stageX - 18.5;
+function moveShip(e) {
+	var moveW = e.stageX;
+
+
+	if ((moveW >= 10) && (moveW <= (windowW - 50))) {
+		ship.x = moveW;
+	}
+	else {
+		checkBound = false;
+		console.log(" Boundary Hit at " + moveW);
+
+	}
+
+
 }
 
-function shoot()
-{
+function shoot() {
 	var b = new Bitmap(bltImg);
 
 	b.x = ship.x + 13;
@@ -183,8 +199,7 @@ function shoot()
 	SoundJS.play('shot');
 }
 
-function addEnemy()
-{
+function addEnemy() {
 	var e = new Bitmap(eImg);
 
 	e.x = Math.floor(Math.random() * (320 - 50))
@@ -194,8 +209,7 @@ function addEnemy()
 	stage.update();
 }
 
-function startGame()
-{
+function startGame() {
 	stage.onMouseMove = moveShip;
 	bg.onPress = shoot;
 	bg2.onPress = shoot;
@@ -206,40 +220,34 @@ function startGame()
 	timerSource = setInterval('addEnemy()', 1000);
 }
 
-function update()
-{
+function update() {
 	/* Move Background */
 
 	bg.y += 5;
 	bg2.y += 5;
 
-	if(bg.y >= 480)
-	{
+	if (bg.y >= 480) {
 		bg.y = -480;
 	}
-	else if(bg2.y >= 480)
-	{
+	else if (bg2.y >= 480) {
 		bg2.y = -480;
 	}
 
 	/* Move Bullets */
 
-	for(var i = 0; i < bullets.children.length; i++)
-	{
+	for (var i = 0; i < bullets.children.length; i++) {
 		bullets.children[i].y -= 10;
 
 		/* Remove Offstage Bullets */
 
-		if(bullets.children[i].y < - 20)
-		{
+		if (bullets.children[i].y < - 20) {
 			bullets.removeChildAt(i);
 		}
 	}
 
 	/* Show Boss */
 
-	if(parseInt(score.text) >= 500 && boss == null)
-	{
+	if (parseInt(score.text) >= 500 && boss == null) {
 		boss = new Bitmap(bImg);
 
 		SoundJS.play('boss');
@@ -248,42 +256,35 @@ function update()
 		boss.y = -183;
 
 		stage.addChild(boss);
-		Tween.get(boss).to({y:40}, 2000)
+		Tween.get(boss).to({ y: 40 }, 2000)
 	}
 
 	/* Move Enemies */
 
-	for(var j = 0; j < enemies.children.length; j++)
-	{
+	for (var j = 0; j < enemies.children.length; j++) {
 		enemies.children[j].y += 8;
 
-		 if (enemies.children[j].x < 320 && enemies.children[j].x > 180)
-		 {
-		 	enemies.children[j].x -= 1.5;
-		 }
-		else if (enemies.children[j].x < 140 && enemies.children[j].x > -50)
-		  {
-		 	enemies.children[j].x += 1.5;
-		  }
+		if (enemies.children[j].x < 320 && enemies.children[j].x > 180) {
+			enemies.children[j].x -= 1.5;
+		}
+		else if (enemies.children[j].x < 140 && enemies.children[j].x > -50) {
+			enemies.children[j].x += 1.5;
+		}
 		/* Remove Offstage Enemies */
-		
-		if(enemies.children[j].y > 480 + 50)
-		{
+
+		if (enemies.children[j].y > 480 + 50) {
 			enemies.removeChildAt(j);
 		}
 		/* Remove Offstage Enemies */
 
-		if(enemies.children[j].y > 480 + 50)
-		{
+		if (enemies.children[j].y > 480 + 50) {
 			enemies.removeChildAt(j);
 		}
 
-		for(var k = 0; k < bullets.children.length; k++)
-		{
+		for (var k = 0; k < bullets.children.length; k++) {
 			/* Bullet - Enemy Collision */
 
-			if(bullets.children[k].x >= enemies.children[j].x && bullets.children[k].x + 11 < enemies.children[j].x + 49 && bullets.children[k].y < enemies.children[j].y + 40)
-			{
+			if (bullets.children[k].x >= enemies.children[j].x && bullets.children[k].x + 11 < enemies.children[j].x + 49 && bullets.children[k].y < enemies.children[j].y + 40) {
 				bullets.removeChildAt(k);
 				enemies.removeChildAt(j);
 				stage.update();
@@ -293,8 +294,7 @@ function update()
 
 			/* Bullet - Boss Collision */
 
-			if(boss != null && bullets.children[k].x >= boss.x && bullets.children[k].x + 11 < boss.x + 183 && bullets.children[k].y < boss.y + 162)
-			{
+			if (boss != null && bullets.children[k].x >= boss.x && bullets.children[k].x + 11 < boss.x + 183 && bullets.children[k].y < boss.y + 162) {
 				bullets.removeChildAt(k);
 				bossHealth--;
 				stage.update();
@@ -305,33 +305,30 @@ function update()
 
 		/* Ship - Enemy Collision */
 
-		if(enemies.hitTest(ship.x, ship.y) || enemies.hitTest(ship.x + 37, ship.y))
-		{
+		if (enemies.hitTest(ship.x, ship.y) || enemies.hitTest(ship.x + 37, ship.y)) {
 			enemies.removeChildAt(j);
 			lives.removeChildAt(lives.length);
+
 			ship.y = 480 + 34;
-			Tween.get(ship).to({y:425}, 500)
+			Tween.get(ship).to({ y: 425 }, 500)
 			SoundJS.play('explo');
 		}
 	}
 
 	/* Check for win */
 
-	if(boss != null && bossHealth <= 0)
-	{
+	if (boss != null && bossHealth <= 0) {
 		alert('win');
 	}
 
 	/* Check for lose */
 
-	if(lives.children.length <= 0)
-	{
+	if (lives.children.length <= 0) {
 		alert('lose');
 	}
 }
 
-function alert(e)
-{
+function alert(e) {
 	/* Remove Listeners */
 
 	stage.onMouseMove = null;
@@ -345,16 +342,14 @@ function alert(e)
 
 	/* Display Correct Message */
 
-	if(e == 'win')
-	{
+	if (e == 'win') {
 		win = new Bitmap(winImg);
 		win.x = centerX - 64;
 		win.y = centerY - 23;
 		stage.addChild(win);
 		stage.removeChild(enemies, boss);
 	}
-	else
-	{
+	else {
 		lose = new Bitmap(loseImg);
 		lose.x = centerX - 64;
 		lose.y = centerY - 23;
@@ -362,7 +357,7 @@ function alert(e)
 		stage.removeChild(enemies, ship);
 	}
 
-	bg.onPress = function(){window.location.reload();};
-	bg2.onPress = function(){window.location.reload();};
+	bg.onPress = function () { window.location.reload(); };
+	bg2.onPress = function () { window.location.reload(); };
 	stage.update();
 }
