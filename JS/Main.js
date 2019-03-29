@@ -33,6 +33,7 @@ var lImg = new Image();
 /* Bullets */
 
 var bltImg = new Image();
+var ebltImg = new Image();
 
 /* Alert */
 
@@ -53,6 +54,7 @@ var centerX = 160;
 var centerY = 240;
 var tkr = new Object();
 var timerSource;
+var eBullets = new Container();
 
 /* Main */
 
@@ -101,6 +103,10 @@ function Main()
 	bltImg.src = 'img/bullet.png';
 	bltImg.name = 'bullet';
 	bltImg.onload = loadGfx;
+
+	ebltImg.src = 'img/ebullet.png';
+	ebltImg.name = 'ebullet';
+
 
 	winImg.src = 'img/win.png';
 	winImg.name = 'win';
@@ -161,7 +167,7 @@ function addGameView()
 
 	/* Add gfx to stage and Tween Ship */
 
-	stage.addChild(bg, bg2, ship, enemies, bullets, lives, score);
+	stage.addChild(bg, bg2, ship, enemies, bullets, lives, score, eBullets);
 	Tween.get(ship).to({y:425}, 1000).call(startGame);
 }
 
@@ -181,6 +187,19 @@ function shoot()
 	stage.update();
 
 	SoundJS.play('shot');
+}
+
+function eShoot(enemy)
+{
+	var c = new Bitmap(ebltImg);
+
+	c.x = enemy.x + 1;
+	c.y = enemy.y - 1;
+	
+	eBullets.addChild(c);
+	stage.update();
+
+
 }
 
 function addEnemy()
@@ -208,8 +227,10 @@ function startGame()
 
 function update()
 {
+	
 	/* Move Background */
 
+	
 	bg.y += 5;
 	bg2.y += 5;
 
@@ -223,16 +244,21 @@ function update()
 	}
 
 	/* Move Bullets */
-
+for(var i = 0; i < eBullets.children.length; i++)
+	{
+		eBullets.children[i].y += 10;
+	}
 	for(var i = 0; i < bullets.children.length; i++)
 	{
 		bullets.children[i].y -= 10;
+		
 
 		/* Remove Offstage Bullets */
 
 		if(bullets.children[i].y < - 20)
 		{
 			bullets.removeChildAt(i);
+			eBullets.removeChildAt(i);
 		}
 	}
 
@@ -255,22 +281,21 @@ function update()
 
 	for(var j = 0; j < enemies.children.length; j++)
 	{
-		enemies.children[j].y += 8;
+		var randomNumberBetween0and20 = Math.floor(Math.random() * 21);
+		enemies.children[j].y += 3;
+		enemies.children[j].x += 1;
 
-		 if (enemies.children[j].x < 320 && enemies.children[j].x > 180)
+		if(randomNumberBetween0and20 == 0)
+			{
+				eShoot(enemies.children[j]);
+				
+			}
+
+		 if (enemies.children[j].x > 300)
 		 {
-		 	enemies.children[j].x -= 1.5;
+		 	enemies.children[j].x = 0;
 		 }
-		else if (enemies.children[j].x < 140 && enemies.children[j].x > -50)
-		  {
-		 	enemies.children[j].x += 1.5;
-		  }
-		/* Remove Offstage Enemies */
-		
-		if(enemies.children[j].y > 480 + 50)
-		{
-			enemies.removeChildAt(j);
-		}
+
 		/* Remove Offstage Enemies */
 
 		if(enemies.children[j].y > 480 + 50)
@@ -301,6 +326,7 @@ function update()
 				SoundJS.play('explo');
 				score.text = parseInt(score.text + 50);
 			}
+			
 		}
 
 		/* Ship - Enemy Collision */
