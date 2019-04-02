@@ -202,6 +202,20 @@ function eShoot(enemy)
 
 }
 
+function bShoot(boss)
+{
+	var randomNumberBetween0and80 = Math.floor(Math.random() * 81);
+	var d = new Bitmap(ebltImg);
+
+	d.x = boss.x + randomNumberBetween0and80;
+	d.y = boss.y - 1;
+	
+	eBullets.addChild(d);
+	stage.update();
+
+
+}
+
 function addEnemy()
 {
 	var e = new Bitmap(eImg);
@@ -247,6 +261,10 @@ function update()
 for(var i = 0; i < eBullets.children.length; i++)
 	{
 		eBullets.children[i].y += 10;
+		if(eBullets.children[i].y > 480)
+		{
+			eBullets.removeChildAt(i);
+		}
 	}
 	for(var i = 0; i < bullets.children.length; i++)
 	{
@@ -258,7 +276,6 @@ for(var i = 0; i < eBullets.children.length; i++)
 		if(bullets.children[i].y < - 20)
 		{
 			bullets.removeChildAt(i);
-			eBullets.removeChildAt(i);
 		}
 	}
 
@@ -275,22 +292,28 @@ for(var i = 0; i < eBullets.children.length; i++)
 
 		stage.addChild(boss);
 		Tween.get(boss).to({y:40}, 2000)
+		
 	}
 
 	/* Move Enemies */
 
 	for(var j = 0; j < enemies.children.length; j++)
 	{
-		var randomNumberBetween0and20 = Math.floor(Math.random() * 21);
-		enemies.children[j].y += 3;
+		var randomNumberBetween0and100 = Math.floor(Math.random() * 101);
+		var randomNumberBetween0and50 = Math.floor(Math.random() * 51);
+		enemies.children[j].y += 2;
 		enemies.children[j].x += 1;
 
-		if(randomNumberBetween0and20 == 0)
+		if(randomNumberBetween0and100 == 0)
 			{
 				eShoot(enemies.children[j]);
 				
 			}
-
+		if(boss != null && randomNumberBetween0and50 == 0)
+		{
+			bShoot(boss);
+			
+		}
 		 if (enemies.children[j].x > 300)
 		 {
 		 	enemies.children[j].x = 0;
@@ -303,6 +326,9 @@ for(var i = 0; i < eBullets.children.length; i++)
 			enemies.removeChildAt(j);
 		}
 
+
+		
+		
 		for(var k = 0; k < bullets.children.length; k++)
 		{
 			/* Bullet - Enemy Collision */
@@ -339,6 +365,17 @@ for(var i = 0; i < eBullets.children.length; i++)
 			Tween.get(ship).to({y:425}, 500)
 			SoundJS.play('explo');
 		}
+		for (var b = 0; b < eBullets.children.length; b++)
+		{
+			if(eBullets.children[b].x + 10 >= ship.x -30 && eBullets.children[b].x - 10 < ship.x + 30 && ship.y < eBullets.children[b].y + 20)
+			{
+				eBullets.removeChildAt(b);
+				lives.removeChildAt(lives.length);
+				ship.y = 480 + 34;
+				Tween.get(ship).to({y:425}, 500)
+				SoundJS.play('explo');
+			}
+	}
 	}
 
 	/* Check for win */
