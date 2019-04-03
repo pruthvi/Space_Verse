@@ -59,7 +59,7 @@ var lives = new Container();
 var bullets = new Container();
 var enemies = new Container();
 var bossHealth = 20;
-var score;
+var score = 0, scoreText;
 var levelText, tagText;
 
 var gfxLoaded = 0;
@@ -234,24 +234,38 @@ function addGameView() {
 	/* Add Lives */
 	for (var i = 0; i < 3; i++) {
 		var l = new Bitmap(lImg);
-		l.x = windowW - 100;	/*	location of lives */
+		switch (i) {
+			case 0:
+				l.x = windowW - 140;
+				break;
+			case 1:
+				l.x = windowW - 120;
+				break;
+			case 2:
+				l.x = windowW - 100;
+				break;
+			default:
+				console.log("Issue in life array!");
+				break;
+		}
+
 		l.y = 50;
 		lives.addChild(l);
 		stage.update();
 	}
 
 	/* Score Text */
-	score = new Text('0', 'bold 14px Courier New', '#FFFFFF');
-	score.maxWidth = 1000;
-	score.x = windowW - 50; /*	location of Scores */
-	score.y = 50;
+	scoreText = new Text('Score: 0', 'bold 14px Courier New', '#FFFFFF');
+	scoreText.maxWidth = 1000;
+	scoreText.x = 50; /*	location of Scores */
+	scoreText.y = 50;
 
 	/* Repeat Background */
 	bg2.y = -windowH;
 	pr2.y = -windowH;
 
 	/* Add gfx to stage and Tween Ship */
-	stage.addChild(bg, bg2, pr, pr2, ship, enemies, bullets, lives, score, eBullets);
+	stage.addChild(bg, bg2, pr, pr2, ship, enemies, bullets, lives, scoreText, eBullets);
 	Tween.get(ship).to({ y: windowH - 100 }, 1000).call(startGame);
 }
 
@@ -362,7 +376,7 @@ function update() {
 	}
 
 	/* Show Boss */
-	if (parseInt(score.text) >= 500 && boss == null) {
+	if (score >= 500 && boss == null) {
 		boss = new Bitmap(bImg);
 		SoundJS.play('boss');
 		boss.x = centerX - 90;
@@ -425,18 +439,21 @@ function update() {
 			if (bullets.children[k].x >= enemies.children[j].x && bullets.children[k].x + 11 < enemies.children[j].x + 49 && bullets.children[k].y < enemies.children[j].y + 40) {
 				bullets.removeChildAt(k);
 				enemies.removeChildAt(j);
+				score += 50;
 				stage.update();
 				SoundJS.play('explo');
-				score.text = parseFloat(score.text + 50);
+				scoreText.text = "Score: " + score;
 			}
 
 			/* Bullet - Boss Collision */
 			if (boss != null && bullets.children[k].x >= boss.x && bullets.children[k].x + 11 < boss.x + 183 && bullets.children[k].y < boss.y + 162) {
 				bullets.removeChildAt(k);
 				bossHealth--;
+				score += 50;
 				stage.update();
 				SoundJS.play('explo');
-				score.text = parseInt(score.text + 50);
+
+				scoreText.text = "Score: " + score;
 			}
 		}
 
@@ -531,7 +548,7 @@ function clearStage() {
 	});
 }
 
-function reloadGame(){
+function reloadGame() {
 
 	window.location.reload();
 
