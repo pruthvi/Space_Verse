@@ -2,7 +2,7 @@
 
 var canvas;
 var stage;
-var windowW, windowH;
+
 /* [Graphics] */
 
 /* Background */
@@ -11,17 +11,6 @@ var bgImg = new Image();
 var bg;
 var bg2Img = new Image();
 var bg2;
-
-var prImg = new Image();
-var pr;
-var pr2Img = new Image();
-var pr2;
-
-var logoImg = new Image();
-var logo;
-
-var startImg = new Image();
-var startButton;
 
 /* Ship */
 
@@ -61,8 +50,8 @@ var enemies = new Container();
 var bossHealth = 20;
 var score;
 var gfxLoaded = 0;
-var centerX;
-var centerY;
+var centerX = 160;
+var centerY = 240;
 var tkr = new Object();
 var timerSource;
 var eBullets = new Container();
@@ -74,21 +63,11 @@ function Main() {
 
 	canvas = document.getElementById('Shooter');
 	stage = new Stage(canvas);
-//	canvas.style.backgroundColor = "#000000";
-	canvas.style.backgroundColor = "#FFFFFF";
 
 	stage.mouseEventsEnabled = true;
 
-	stage.canvas.width = window.innerWidth;
-	stage.canvas.height = window.innerHeight;
-
-	windowH = stage.canvas.height;
-	windowW = stage.canvas.width;
-	centerX = windowW / 2;
-	centerY = windowH / 2;
-
-
 	/* Sound */
+
 	SoundJS.addBatch([
 		{ name: 'boss', src: 'sound/boss.mp3', instances: 1 },
 		{ name: 'explo', src: 'sound/explo.mp3', instances: 10 },
@@ -96,27 +75,13 @@ function Main() {
 
 	/* Load GFX */
 
-	bgImg.src = 'img/galaxy.jpg';
+	bgImg.src = 'img/bg.png';
 	bgImg.name = 'bg';
 	bgImg.onload = loadGfx;
 
-	bg2Img.src = 'img/galaxy.jpg';
+	bg2Img.src = 'img/bg2.png';
 	bg2Img.name = 'bg2';
 	bg2Img.onload = loadGfx;
-
-	prImg.src = 'img/bg.png';
-	prImg.name = 'pr';
-	prImg.onload = loadGfx;
-
-	pr2Img.src = 'img/bg.png';
-	pr2Img.name = 'pr2';
-	pr2Img.onload = loadGfx;
-
-	logoImg.src = 'img/space-verse.png';
-	logoImg.name = 'logo';
-	
-	startImg.src = 'img/start.png';
-	startImg.name = 'startButton';
 
 	sImg.src = 'img/ship.png';
 	sImg.name = 'ship';
@@ -130,9 +95,6 @@ function Main() {
 	bImg.name = 'boss';
 	bImg.onload = loadGfx;
 
-	ebltImg.src = 'img/ebullet.png';
-	ebltImg.name = 'ebullet';
-
 	lImg.src = 'img/live.png';
 	lImg.name = 'live';
 	lImg.onload = loadGfx;
@@ -140,6 +102,10 @@ function Main() {
 	bltImg.src = 'img/bullet.png';
 	bltImg.name = 'bullet';
 	bltImg.onload = loadGfx;
+
+	ebltImg.src = 'img/ebullet.png';
+	ebltImg.name = 'ebullet';
+
 
 	winImg.src = 'img/win.png';
 	winImg.name = 'win';
@@ -149,133 +115,102 @@ function Main() {
 	loseImg.name = 'lose';
 	loseImg.onload = loadGfx;
 
-	startScreen();
-
-
 	/* Ticker */
+
 	Ticker.setFPS(30);
 	Ticker.addListener(stage);
-
 }
 
 function loadGfx(e) {
-	if (e.target.name = 'bg') {
-		bg = new Shape();
-		bg.graphics.beginBitmapFill(bgImg, 'repeat').drawRect(0, 0, canvas.width, canvas.height);
-		//bg = new Bitmap(bgImg); 
-	}
-
-	if (e.target.name = 'bg2') {
-		bg2 = new Shape();
-		bg2.graphics.beginBitmapFill(bg2Img, 'repeat').drawRect(0, 0, canvas.width, canvas.height);
-	}
-	if (e.target.name = 'pr') {
-		pr = new Shape();
-		pr.graphics.beginBitmapFill(prImg, 'repeat').drawRect(0, 0, canvas.width, canvas.height);
-	}
-
-	if (e.target.name = 'pr2') {
-		pr2 = new Shape();
-		pr2.graphics.beginBitmapFill(pr2Img, 'repeat').drawRect(0, 0, canvas.width, canvas.height);
-	}
-
-	//if (e.target.name = 'pr') { pr = new Bitmap(prImg); }
-
+	if (e.target.name = 'bg') { bg = new Bitmap(bgImg); }
+	if (e.target.name = 'bg2') { bg2 = new Bitmap(bg2Img); }
 	if (e.target.name = 'ship') { ship = new Bitmap(sImg); }
-
-	//stage.addChild(bg, bg2, pr, pr2);
 
 	gfxLoaded++;
 
-	if (gfxLoaded == 11) {
-		
-		//addGameView();
+	if (gfxLoaded == 9) {
+		addGameView();
 	}
 }
 
-function startScreen() {
-
-	logo = new Bitmap(logoImg);
-	//logo = new Shape();
-	//logo.graphics.beginBitmapFill(logoImg, 'no-repeat').drawRect(0, 0, canvas.width, canvas.height);
-	logo.scaleX = 0.1;
-	logo.scaleY = 0.1;
-
-	logo.x = (windowW / 2) - 200;
-	logo.y = (windowH / 2) - 200;
-
-	startButton = new Bitmap(startImg);
-	startButton.x = logo.x;
-	startButton.y = logo.y + 300;
-
-	stage.addChild(logo, startButton);
-	stage.update();
-
-	// Button Listeners
-
-	startButton.onPress = addGameView;
-
-
-}
-
 function addGameView() {
-
-	stage.removeChild(logo);
-
-	ship.x = centerX
-	ship.y = windowH - 50;
-
+	ship.x = centerX - 18.5;
+	ship.y = 480 + 34;
 
 	/* Add Lives */
+
 	for (var i = 0; i < 3; i++) {
 		var l = new Bitmap(lImg);
-		l.x = windowW - 100;	/*	location of lives */
-		l.y = 50;
+
+		l.x = 248 + (25 * i);
+		l.y = 463;
+
 		lives.addChild(l);
 		stage.update();
 	}
 
 	/* Score Text */
-	score = new Text('0', 'bold 14px Courier New', '#FFFFFF');
-	score.maxWidth = 1000;
-	score.x = windowW - 50; /*	location of Scores */
-	score.y = 50;
 
-	/* Repeat Background */
-	bg2.y = -windowH;
-	pr2.y = -windowH;
+	score = new Text('0', 'bold 14px Courier New', '#FFFFFF');
+	score.maxWidth = 1000;	//fix for Chrome 17
+	score.x = 2;
+	score.y = 476;
+
+	/* Second Background */
+
+	bg2.y = -480;
 
 	/* Add gfx to stage and Tween Ship */
-	stage.addChild(bg, bg2, pr, pr2, ship, enemies, bullets, lives, score, eBullets);
-	Tween.get(ship).to({ y: /*425*/ windowH - 100 }, 1000).call(startGame);
+
+	stage.addChild(bg, bg2, ship, enemies, bullets, lives, score, eBullets);
+	Tween.get(ship).to({ y: 425 }, 1000).call(startGame);
 }
 
 function moveShip(e) {
-	var moveW = e.stageX;
-	if ((moveW >= 30) && (moveW <= (windowW - 50))) {
-		ship.x = moveW;
-	}
-	else {
-		checkBound = false;
-	}
+	ship.x = e.stageX - 18.5;
 }
-
 
 function shoot() {
 	var b = new Bitmap(bltImg);
+
 	b.x = ship.x + 13;
 	b.y = ship.y - 20;
 
 	bullets.addChild(b);
 	stage.update();
+
 	SoundJS.play('shot');
+}
+
+function eShoot(enemy) {
+	var c = new Bitmap(ebltImg);
+
+	c.x = enemy.x + 1;
+	c.y = enemy.y - 1;
+
+	eBullets.addChild(c);
+	stage.update();
+
+
+}
+
+function bShoot(boss) {
+	var randomNumberBetween0and80 = Math.floor(Math.random() * 81);
+	var d = new Bitmap(ebltImg);
+
+	d.x = boss.x + randomNumberBetween0and80;
+	d.y = boss.y - 1;
+
+	eBullets.addChild(d);
+	stage.update();
+
+
 }
 
 function addEnemy() {
 	var e = new Bitmap(eImg);
 
-	e.x = Math.floor(Math.random() * Math.floor(windowW));
-
+	e.x = Math.floor(Math.random() * (320 - 50))
 	e.y = -50
 
 	enemies.addChild(e);
@@ -296,100 +231,83 @@ function startGame() {
 function update() {
 
 	/* Move Background */
-	bg.y += 2;
-	bg2.y += 2;
-	pr.y += 3;
-	pr2.y += 3;
 
-	if (bg.y >= windowH) {
-		bg.y = -windowH;
-	}
-	else if (bg2.y >= windowH) {
-		bg2.y = -windowH;
-	}
 
-	if (pr.y >= windowH) {
-		pr.y = -windowH;
+	bg.y += 5;
+	bg2.y += 5;
+
+	if (bg.y >= 480) {
+		bg.y = -480;
 	}
-	else if (pr2.y >= windowH) {
-		pr2.y = -windowH;
+	else if (bg2.y >= 480) {
+		bg2.y = -480;
 	}
 
 	/* Move Bullets */
 	for (var i = 0; i < eBullets.children.length; i++) {
 		eBullets.children[i].y += 10;
-		if (eBullets.children[i].y > windowH) {
+		if (eBullets.children[i].y > 480) {
 			eBullets.removeChildAt(i);
 		}
 	}
 	for (var i = 0; i < bullets.children.length; i++) {
 		bullets.children[i].y -= 10;
-		if (bullets.children[i].y < - 20) {		/* Remove Offstage Bullets */
+
+
+		/* Remove Offstage Bullets */
+
+		if (bullets.children[i].y < - 20) {
 			bullets.removeChildAt(i);
 		}
 	}
 
 	/* Show Boss */
+
 	if (parseInt(score.text) >= 500 && boss == null) {
 		boss = new Bitmap(bImg);
+
 		SoundJS.play('boss');
+
 		boss.x = centerX - 90;
 		boss.y = -183;
+
 		stage.addChild(boss);
 		Tween.get(boss).to({ y: 40 }, 2000)
+
 	}
 
 	/* Move Enemies */
+
 	for (var j = 0; j < enemies.children.length; j++) {
 		var randomNumberBetween0and100 = Math.floor(Math.random() * 101);
 		var randomNumberBetween0and50 = Math.floor(Math.random() * 51);
-
-		//Enemy Speed
-		enemies.children[j].y += 4;
+		enemies.children[j].y += 2;
 		enemies.children[j].x += 1;
-		enemies.children[j].rotation += 2;
-		// var randomSpeedRange = Math.floor(Math.random() * 10) - 5;
-		// console.log("RandomSpeedRange" + enemies.children[j] +" : " + randomSpeedRange);
-		// enemies.children[j].x += randomSpeedRange;
-
-
-		// while(enemies.children[j].y != windowH){
-		//var randomTimeRange = Math.floor(Math.random() * Math.floor(200));
-		//console.log("RandomTimeRange: " + randomTimeRange);
-
-		// var m = 0;
-		// while(m<2){
-		// 	var randomSpeedRange = Math.floor(Math.random() * 10) - 5;
-		// 	//console.log("RandomSpeedRange: " + randomSpeedRange);
-		// 	enemies.children[j].x += randomSpeedRange;
-		// 	m++;
-		// }
-		// if (m == 500){
-		// 	m =0;
-		// }
-
-
-		// }
-
 
 		if (randomNumberBetween0and100 == 0) {
 			eShoot(enemies.children[j]);
+
 		}
 		if (boss != null && randomNumberBetween0and50 == 0) {
 			bShoot(boss);
+
 		}
-		if (enemies.children[j].x > windowW) {
+		if (enemies.children[j].x > 300) {
 			enemies.children[j].x = 0;
 		}
 
 		/* Remove Offstage Enemies */
-		if (enemies.children[j].y > windowH) {
+
+		if (enemies.children[j].y > 480 + 50) {
 			enemies.removeChildAt(j);
 		}
 
-		for (var k = 0; k < bullets.children.length; k++) {
 
+
+
+		for (var k = 0; k < bullets.children.length; k++) {
 			/* Bullet - Enemy Collision */
+
 			if (bullets.children[k].x >= enemies.children[j].x && bullets.children[k].x + 11 < enemies.children[j].x + 49 && bullets.children[k].y < enemies.children[j].y + 40) {
 				bullets.removeChildAt(k);
 				enemies.removeChildAt(j);
@@ -399,6 +317,7 @@ function update() {
 			}
 
 			/* Bullet - Boss Collision */
+
 			if (boss != null && bullets.children[k].x >= boss.x && bullets.children[k].x + 11 < boss.x + 183 && bullets.children[k].y < boss.y + 162) {
 				bullets.removeChildAt(k);
 				bossHealth--;
@@ -406,55 +325,40 @@ function update() {
 				SoundJS.play('explo');
 				score.text = parseInt(score.text + 50);
 			}
+
 		}
 
 		/* Ship - Enemy Collision */
+
 		if (enemies.hitTest(ship.x, ship.y) || enemies.hitTest(ship.x + 37, ship.y)) {
 			enemies.removeChildAt(j);
 			lives.removeChildAt(lives.length);
-
-			Tween.get(ship).to({ x: centerX }, 200)
+			ship.y = 480 + 34;
+			Tween.get(ship).to({ y: 425 }, 500)
 			SoundJS.play('explo');
 		}
 		for (var b = 0; b < eBullets.children.length; b++) {
 			if (eBullets.children[b].x + 10 >= ship.x - 30 && eBullets.children[b].x - 10 < ship.x + 30 && ship.y < eBullets.children[b].y + 20) {
 				eBullets.removeChildAt(b);
 				lives.removeChildAt(lives.length);
-
-				Tween.get(ship).to({ x: centerX }, 200)
+				ship.y = 480 + 34;
+				Tween.get(ship).to({ y: 425 }, 500)
 				SoundJS.play('explo');
 			}
 		}
 	}
 
 	/* Check for win */
+
 	if (boss != null && bossHealth <= 0) {
 		alert('win');
 	}
 
 	/* Check for lose */
+
 	if (lives.children.length <= 0) {
 		alert('lose');
 	}
-}
-
-function eShoot(enemy) {
-	var c = new Bitmap(ebltImg);
-
-	c.x = enemy.x + 1;
-	c.y = enemy.y - 1;
-
-	eBullets.addChild(c);
-	stage.update();
-}
-
-function bShoot(boss) {
-	var randomNumberBetween0and80 = Math.floor(Math.random() * 81);
-	var d = new Bitmap(ebltImg);
-	d.x = boss.x + randomNumberBetween0and80;
-	d.y = boss.y + 25;
-	eBullets.addChild(d);
-	stage.update();
 }
 
 function alert(e) {
@@ -470,17 +374,18 @@ function alert(e) {
 	timerSource = null;
 
 	/* Display Correct Message */
+
 	if (e == 'win') {
 		win = new Bitmap(winImg);
-		win.x = centerX;
-		win.y = centerY;
+		win.x = centerX - 64;
+		win.y = centerY - 23;
 		stage.addChild(win);
 		stage.removeChild(enemies, boss);
 	}
 	else {
 		lose = new Bitmap(loseImg);
-		lose.x = centerX;
-		lose.y = centerY;
+		lose.x = centerX - 64;
+		lose.y = centerY - 23;
 		stage.addChild(lose);
 		stage.removeChild(enemies, ship);
 	}
