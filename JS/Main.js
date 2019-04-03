@@ -60,6 +60,8 @@ var bullets = new Container();
 var enemies = new Container();
 var bossHealth = 20;
 var score;
+var levelText, tagText;
+
 var gfxLoaded = 0;
 var centerX;
 var centerY;
@@ -74,7 +76,7 @@ function Main() {
 
 	canvas = document.getElementById('Shooter');
 	stage = new Stage(canvas);
-//	canvas.style.backgroundColor = "#000000";
+	//	canvas.style.backgroundColor = "#000000";
 	canvas.style.backgroundColor = "#FFFFFF";
 
 	stage.mouseEventsEnabled = true;
@@ -114,7 +116,7 @@ function Main() {
 
 	logoImg.src = 'img/space-verse.png';
 	logoImg.name = 'logo';
-	
+
 	startImg.src = 'img/start.png';
 	startImg.name = 'startButton';
 
@@ -188,7 +190,7 @@ function loadGfx(e) {
 	gfxLoaded++;
 
 	if (gfxLoaded == 11) {
-		
+
 		//addGameView();
 	}
 }
@@ -213,7 +215,10 @@ function startScreen() {
 
 	// Button Listeners
 
-	startButton.onPress = addGameView;
+	startButton.onPress = function () {
+		Tween.get(logo).wait(1000).to({ alpha: 0, visible: false }, 1000);
+		Tween.get(startButton).wait(1000).to({ alpha: 0, visible: false }, 1000).call(addGameView);
+	};
 
 
 }
@@ -247,7 +252,7 @@ function addGameView() {
 
 	/* Add gfx to stage and Tween Ship */
 	stage.addChild(bg, bg2, pr, pr2, ship, enemies, bullets, lives, score, eBullets);
-	Tween.get(ship).to({ y: /*425*/ windowH - 100 }, 1000).call(startGame);
+	Tween.get(ship).to({ y: windowH - 100 }, 1000).call(startGame);
 }
 
 function moveShip(e) {
@@ -258,6 +263,33 @@ function moveShip(e) {
 	else {
 		checkBound = false;
 	}
+}
+
+function levelText(getText, taglineText, callback) {
+	levelText = new Text('', 'bold 36px Arial', '#FF0000');
+	levelText.maxWidth = 1000;
+	levelText.textAlign = 'center';
+	levelText.x = centerX;
+	levelText.y = centerY;
+	levelText.text = getText;
+	stage.addChild(levelText);
+
+	tagText = new Text('', 'italic 18px Courier New', '#FF0000');
+	tagText.maxWidth = 1000;
+	tagText.textAlign = 'center';
+	tagText.x = centerX;
+	tagText.y = levelText.y + 100;
+	tagText.text = taglineText;
+	stage.addChild(tagText);
+
+
+	createjs.Tween.get(tagText, { override: true }).wait(5000).to({ alpha: 0, y: (tagText.y + 50), visible: false }, 1000);
+	createjs.Tween.get(levelText, { override: true }).wait(5000).to({ alpha: 0, y: (levelText.y - 50), visible: false }, 1000)
+		.call(function () {
+			stage.removeChild(levelText, tagText);
+			callback();
+		});
+
 }
 
 
@@ -471,21 +503,43 @@ function alert(e) {
 
 	/* Display Correct Message */
 	if (e == 'win') {
-		win = new Bitmap(winImg);
-		win.x = centerX;
-		win.y = centerY;
-		stage.addChild(win);
-		stage.removeChild(enemies, boss);
+		// win = new Bitmap(winImg);
+		// win.x = centerX;
+		// win.y = centerY;
+		// stage.addChild(win);
+		// stage.removeChild(enemies, boss);
+
+		clearStage();
+		levelText("Level 2", "Congrats! but hold on, game just got harder...", level2);
+
 	}
 	else {
-		lose = new Bitmap(loseImg);
-		lose.x = centerX;
-		lose.y = centerY;
-		stage.addChild(lose);
-		stage.removeChild(enemies, ship);
+
+		clearStage();
+		levelText("You LOST!", "Game will restart automatically", reloadGame);
+
 	}
 
-	bg.onPress = function () { window.location.reload(); };
-	bg2.onPress = function () { window.location.reload(); };
+	// bg.onPress = function () { window.location.reload(); };
+	// bg2.onPress = function () { window.location.reload(); };
 	stage.update();
+}
+
+function clearStage() {
+	stage.children.forEach(element => {
+		Tween.get(element).wait(1000).to({ alpha: 0, visible: false }, 1000);
+	});
+}
+
+function reloadGame(){
+
+	window.location.reload();
+
+}
+
+function level2() {
+
+	console.log("Level 2 opened");
+
+
 }
