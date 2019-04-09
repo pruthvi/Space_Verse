@@ -11,11 +11,19 @@ var bgImg = new Image();
 var bg;
 var bg2Img = new Image();
 var bg2;
-
 var prImg = new Image();
 var pr;
 var pr2Img = new Image();
 var pr2;
+
+var lv2bgImg = new Image();
+var lv2bg;
+var lv2bg2Img = new Image();
+var lv2bg2;
+var lv2prImg = new Image();
+var lv2pr;
+var lv2pr2Img = new Image();
+var lv2pr2;
 
 var logoImg = new Image();
 var logo;
@@ -52,6 +60,17 @@ var winImg = new Image();
 var loseImg = new Image();
 var win;
 var lose;
+
+/* Explosion */
+var data = {
+	images: ["img\spritesheet\explosion.png"],
+	frames: {width:64, height:64},
+	animations: {
+		stand:0,
+	}
+};
+var spriteSheet = new createjs.SpriteSheet(data);
+var animation = new createjs.Sprite(spriteSheet);
 
 /* Variables */
 
@@ -114,6 +133,25 @@ function Main() {
 	pr2Img.name = 'pr2';
 	pr2Img.onload = loadGfx;
 
+	// /* Level2 BG */
+	// lv2bgImg.src = 'img/galaxy2.jpg';
+	// lv2bgImg.name = 'lv2bg';
+	// lv2bgImg.onload = loadGfx;
+
+	// lv2bg2Img.src = 'img/galaxy2.jpg';
+	// lv2bg2Img.name = 'lv2bg2';
+	// lv2bg2Img.onload = loadGfx;
+
+	// lv2prImg.src = 'img/bg2.png';
+	// lv2prImg.name = 'lv2pr';
+	// lv2prImg.onload = loadGfx;
+
+	// lv2pr2Img.src = 'img/bg2.png';
+	// lv2pr2Img.name = 'lv2pr2';
+	// lv2pr2Img.onload = loadGfx;
+
+
+
 	logoImg.src = 'img/space-verse.png';
 	logoImg.name = 'logo';
 
@@ -153,7 +191,6 @@ function Main() {
 
 	startScreen();
 
-
 	/* Ticker */
 	Ticker.setFPS(30);
 	Ticker.addListener(stage);
@@ -181,6 +218,28 @@ function loadGfx(e) {
 		pr2.graphics.beginBitmapFill(pr2Img, 'repeat').drawRect(0, 0, canvas.width, canvas.height);
 	}
 
+	// /*Level 2 bg */
+	// if (e.target.name = 'lv2bg') {
+	// 	bg = new Shape();
+	// 	bg.graphics.beginBitmapFill(lv2bgImg, 'repeat').drawRect(0, 0, canvas.width, canvas.height);
+	// }
+
+	// if (e.target.name = 'lv2bg2') {
+	// 	bg2 = new Shape();
+	// 	bg2.graphics.beginBitmapFill(lv2bg2Img, 'repeat').drawRect(0, 0, canvas.width, canvas.height);
+	// }
+	// if (e.target.name = 'lv2pr') {
+	// 	pr = new Shape();
+	// 	pr.graphics.beginBitmapFill(lv2prImg, 'repeat').drawRect(0, 0, canvas.width, canvas.height);
+	// }
+
+	// if (e.target.name = 'lv2pr2') {
+	// 	pr2 = new Shape();
+	// 	pr2.graphics.beginBitmapFill(lv2pr2Img, 'repeat').drawRect(0, 0, canvas.width, canvas.height);
+	// }
+
+	
+
 	//if (e.target.name = 'pr') { pr = new Bitmap(prImg); }
 
 	if (e.target.name = 'ship') { ship = new Bitmap(sImg); }
@@ -195,79 +254,6 @@ function loadGfx(e) {
 	}
 }
 
-function startScreen() {
-
-	logo = new Bitmap(logoImg);
-	//logo = new Shape();
-	//logo.graphics.beginBitmapFill(logoImg, 'no-repeat').drawRect(0, 0, canvas.width, canvas.height);
-	logo.scaleX = 0.1;
-	logo.scaleY = 0.1;
-
-	logo.x = (windowW / 2) - 200;
-	logo.y = (windowH / 2) - 200;
-
-	startButton = new Bitmap(startImg);
-	startButton.x = logo.x;
-	startButton.y = logo.y + 300;
-
-	stage.addChild(logo, startButton);
-	stage.update();
-
-	// Button Listeners
-
-	startButton.onPress = function () {
-		Tween.get(logo).wait(1000).to({ alpha: 0, visible: false }, 1000);
-		Tween.get(startButton).wait(1000).to({ alpha: 0, visible: false }, 1000).call(addGameView);
-	};
-
-
-}
-
-function addGameView() {
-
-	stage.removeChild(logo);
-
-	ship.x = centerX
-	ship.y = windowH - 50;
-
-
-	/* Add Lives */
-	for (var i = 0; i < 3; i++) {
-		var l = new Bitmap(lImg);
-		switch (i) {
-			case 0:
-				l.x = windowW - 140;
-				break;
-			case 1:
-				l.x = windowW - 120;
-				break;
-			case 2:
-				l.x = windowW - 100;
-				break;
-			default:
-				console.log("Issue in life array!");
-				break;
-		}
-
-		l.y = 50;
-		lives.addChild(l);
-		stage.update();
-	}
-
-	/* Score Text */
-	scoreText = new Text('Score: 0', 'bold 14px Courier New', '#FFFFFF');
-	scoreText.maxWidth = 1000;
-	scoreText.x = 50; /*	location of Scores */
-	scoreText.y = 50;
-
-	/* Repeat Background */
-	bg2.y = -windowH;
-	pr2.y = -windowH;
-
-	/* Add gfx to stage and Tween Ship */
-	stage.addChild(bg, bg2, pr, pr2, ship, enemies, bullets, lives, scoreText, eBullets);
-	Tween.get(ship).to({ y: windowH - 100 }, 1000).call(startGame);
-}
 
 function moveShip(e) {
 	var moveW = e.stageX;
@@ -328,6 +314,85 @@ function addEnemy() {
 	stage.update();
 }
 
+
+
+function startScreen() {
+
+	logo = new Bitmap(logoImg);
+	//logo = new Shape();
+	//logo.graphics.beginBitmapFill(logoImg, 'no-repeat').drawRect(0, 0, canvas.width, canvas.height);
+	logo.scaleX = 0.1;
+	logo.scaleY = 0.1;
+
+	logo.x = (windowW / 2) - 200;
+	logo.y = (windowH / 2) - 200;
+
+	startButton = new Bitmap(startImg);
+	startButton.x = logo.x;
+	startButton.y = logo.y + 300;
+
+	stage.addChild(logo, startButton);
+	stage.update();
+
+	// Button Listeners
+
+	startButton.onPress = function () {
+		Tween.get(logo).wait(1000).to({ alpha: 0, visible: false }, 1000);
+		Tween.get(startButton).wait(1000).to({ alpha: 0, visible: false }, 1000).call(addGameView);
+	};
+
+
+}
+
+function addGameView() {
+
+	//stage.removeChild(logo);
+	clearStage();
+
+	ship.x = centerX
+	ship.y = windowH - 50;
+
+
+	/* Add Lives */
+	for (var i = 0; i < 3; i++) {
+		var l = new Bitmap(lImg);
+		switch (i) {
+			case 0:
+				l.x = windowW - 140;
+				break;
+			case 1:
+				l.x = windowW - 120;
+				break;
+			case 2:
+				l.x = windowW - 100;
+				break;
+			default:
+				console.log("Issue in life array!");
+				break;
+		}
+
+		l.y = 50;
+		lives.addChild(l);
+		stage.update();
+	}
+
+	/* Score Text */
+	scoreText = new Text('Score: 0', 'bold 14px Courier New', '#FFFFFF');
+	scoreText.maxWidth = 1000;
+	scoreText.x = 50; /*	location of Scores */
+	scoreText.y = 50;
+
+	/* Repeat Background */
+	bg2.y = -windowH;
+	pr2.y = -windowH;
+
+	/* Add gfx to stage and Tween Ship */
+	stage.addChild(bg, bg2, pr, pr2, ship, enemies, bullets, lives, scoreText, eBullets);
+	Tween.get(ship).to({ y: windowH - 100 }, 1000).call(startGame);
+
+
+}
+
 function startGame() {
 	stage.onMouseMove = moveShip;
 	bg.onPress = shoot;
@@ -374,6 +439,9 @@ function update() {
 			bullets.removeChildAt(i);
 		}
 	}
+
+
+	stage.addChild(spriteSheet)
 
 	/* Show Boss */
 	if (score >= 500 && boss == null) {
@@ -483,7 +551,7 @@ function update() {
 
 	/* Check for lose */
 	if (lives.children.length <= 0) {
-		alert('lose');
+		alert('win');
 	}
 }
 
@@ -558,5 +626,61 @@ function level2() {
 
 	console.log("Level 2 opened");
 
+
+	Tween.get(ship).to({ alpha: 1, visible: true }, 1000);
+	ship.x = centerX
+	ship.y = windowH - 50;
+	stage.onMouseMove = moveShip;
+		
+
+	bglv.onPress = shoot;
+	bglv2.onPress = shoot;
+
+	/* Add Lives */
+	for (var i = 0; i < 3; i++) {
+		var l = new Bitmap(lImg);
+		switch (i) {
+			case 0:
+				l.x = windowW - 140;
+				break;
+			case 1:
+				l.x = windowW - 120;
+				break;
+			case 2:
+				l.x = windowW - 100;
+				break;
+			default:
+				console.log("Issue in life array!");
+				break;
+		}
+
+		l.y = 50;
+		stage.update();
+	}
+	Tween.get(lives).to({ alpha: 1, visible: true }, 1000);
+	stage.addChild(lv2bg, lv2bg2, lv2pr, lv2pr2);
+
+	/* Move Background */
+	lv2bg.y += 2;
+	lv2bg2.y += 2;
+	lv2pr.y += 3;
+	lv2pr2.y += 3;
+
+	if (lv2bg.y >= windowH) {
+		lv2bg.y = -windowH;
+	}
+	else if (lv2bg2.y >= windowH) {
+		lv2bg2.y = -windowH;
+	}
+
+	if (lv2pr.y >= windowH) {
+		lv2pr.y = -windowH;
+	}
+	else if (lv2pr2.y >= windowH) {
+		lv2pr2.y = -windowH;
+	}
+
+	/* Add gfx to stage and Tween Ship */
+	//stage.addChild(bg, bg2, pr, pr2, ship, enemies, bullets, lives, scoreText, eBullets);
 
 }

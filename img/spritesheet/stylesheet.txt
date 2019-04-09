@@ -1,0 +1,41 @@
+.sprite {
+    background-image: url(spritesheet.png);
+    background-repeat: no-repeat;
+    display: block;
+}
+
+.sprite-boss {
+    width: 143px;
+    height: 200px;
+    background-position: -5px -5px;
+}
+
+.sprite-bullet {
+    width: 11px;
+    height: 19px;
+    background-position: -158px -5px;
+}
+
+.sprite-ebullet {
+    width: 20px;
+    height: 44px;
+    background-position: -179px -5px;
+}
+
+.sprite-enemy1 {
+    width: 50px;
+    height: 50px;
+    background-position: -209px -5px;
+}
+
+.sprite-live {
+    width: 30px;
+    height: 29px;
+    background-position: -158px -65px;
+}
+
+.sprite-ship {
+    width: 50px;
+    height: 44px;
+    background-position: -198px -65px;
+}
