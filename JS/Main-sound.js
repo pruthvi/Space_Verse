@@ -68,12 +68,11 @@ var centerY;
 var tkr = new Object();
 var timerSource;
 var eBullets = new Container();
-
 /* Main */
 
 function Main() {
 	/* Link Canvas */
-
+	
 	canvas = document.getElementById('Shooter');
 	stage = new Stage(canvas);
 	//	canvas.style.backgroundColor = "#000000";
@@ -90,8 +89,10 @@ function Main() {
 	centerY = windowH / 2;
 
 
+
 	/* Sound */
 	SoundJS.addBatch([
+		{ name: "bgm", src:"sound/bgm.mp3", instances: 1},
 		{ name: 'boss', src: 'sound/boss.mp3', instances: 1 },
 		{ name: 'explo', src: 'sound/explo.mp3', instances: 10 },
 		{ name: 'shot', src: 'sound/shot.mp3', instances: 10 }]);
@@ -159,6 +160,7 @@ function Main() {
 	Ticker.addListener(stage);
 
 }
+
 
 function loadGfx(e) {
 	if (e.target.name = 'bg') {
@@ -332,7 +334,7 @@ function startGame() {
 	stage.onMouseMove = moveShip;
 	bg.onPress = shoot;
 	bg2.onPress = shoot;
-
+	SoundJS.play('bgm');
 	Ticker.addListener(tkr, false);
 	tkr.tick = update;
 
