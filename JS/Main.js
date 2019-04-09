@@ -66,11 +66,11 @@ var data = {
 	images: ["img\spritesheet\explosion.png"],
 	frames: {width:64, height:64},
 	animations: {
-		stand:0,
+        run: [0, 64]
 	}
 };
 var spriteSheet = new createjs.SpriteSheet(data);
-var animation = new createjs.Sprite(spriteSheet);
+var animation = new createjs.Sprite(spriteSheet, "explode");
 
 /* Variables */
 
@@ -439,9 +439,6 @@ function update() {
 			bullets.removeChildAt(i);
 		}
 	}
-
-
-	stage.addChild(spriteSheet)
 
 	/* Show Boss */
 	if (score >= 500 && boss == null) {
