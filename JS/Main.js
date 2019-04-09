@@ -336,7 +336,7 @@ function startGame() {
 	Ticker.addListener(tkr, false);
 	tkr.tick = update;
 
-	timerSource = setInterval('addEnemy()', 1000);
+	timerSource = setInterval('addEnemy()', 3500);
 }
 
 function update() {
@@ -498,9 +498,9 @@ function eShoot(enemy) {
 }
 
 function bShoot(boss) {
-	var randomNumberBetween0and80 = Math.floor(Math.random() * 81);
+	var randomNumberBetween0and80 = Math.floor(Math.random() * 251);
 	var d = new Bitmap(ebltImg);
-	d.x = boss.x + randomNumberBetween0and80;
+	d.x = boss.x + randomNumberBetween0and80 - 100;
 	d.y = boss.y + 25;
 	eBullets.addChild(d);
 	stage.update();
