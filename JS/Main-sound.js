@@ -384,7 +384,8 @@ function update() {
 		boss.x = centerX - 90;
 		boss.y = -183;
 		stage.addChild(boss);
-		Tween.get(boss).to({ y: 40 }, 2000)
+		Tween.get(boss).to({ y: 40 }, 2000);
+		
 	}
 
 	/* Move Enemies */
