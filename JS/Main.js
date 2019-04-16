@@ -526,7 +526,7 @@ function alert(e) {
 		eImg.src = 'img/enemy11.png';
 		bImg.src = 'img/boss1.png';
 		ebltImg.src = 'img/e2bullet.png'
-
+		SoundJS.play('bgm');
 		if(levelName == 'Level 1'){
 			levelText("Level 2", "Congrats! but hold on, game just got harder...", level_2);
 		}
