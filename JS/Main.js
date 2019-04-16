@@ -141,6 +141,7 @@ function Main() {
 
 	bltImg.src = 'img/bullet.png';
 	bltImg.name = 'bullet';
+	
 
 	startScreen();
 
@@ -358,7 +359,9 @@ function update() {
 		boss.y = -183;
 		stage.addChild(boss);
 		Tween.get(boss).to({ y: 40 }, 2000);
+		bltImg.src = 'img/nBullet.png';
 	}
+
 
 	/* Move Enemies */
 	for (var j = 0; j < enemies.children.length; j++) {
@@ -519,8 +522,10 @@ function alert(e) {
 
 	/* Display Correct Message */
 	if (e == 'win') {
+		stage.removeChild(boss);
+		eImg.src = 'img/enemy11.png';
+		bImg.src = 'img/boss1.png';
 
-		clearStage();
 		if(levelName == 'Level 1'){
 			levelText("Level 2", "Congrats! but hold on, game just got harder...", level_2);
 		}
